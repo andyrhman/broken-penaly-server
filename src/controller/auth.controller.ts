@@ -64,7 +64,7 @@ export const Login = async (req: Request, res: Response) => {
     }
 
     if (!user) {
-        return res.status(404).send({
+        return res.status(400).send({
             message: "Username atau Email tidak valid"
         });
     }
@@ -74,7 +74,7 @@ export const Login = async (req: Request, res: Response) => {
             message: "Password tidak valid"
         });
     }
-
+ 
     if (!(await argon2.verify(user.password, body.password))) {
         return res.status(400).send({ message: "Password tidak valid" });
     }

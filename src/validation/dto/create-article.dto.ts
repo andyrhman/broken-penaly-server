@@ -18,7 +18,6 @@ export class CreateArticleDto {
     estimasi_membaca: string;
 
     @IsString({ message: 'Gambar harus string' })
-    @IsNotEmpty({ message: "Gambar tidak boleh kosong" })
     gambar: string;
 
     @IsUUID('4', { message: 'Request tidak valid' })

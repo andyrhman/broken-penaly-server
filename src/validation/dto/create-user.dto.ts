@@ -14,7 +14,6 @@ export class CreateUserDTO {
   @IsNotEmpty({message: "Email tidak boleh kosong"})
   email: string;
 
-  @IsInt({ message: 'Role tidak valid' })
   @IsNotEmpty({message: "Role tidak boleh kosong"})
   role_id: number;
 }

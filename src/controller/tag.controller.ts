@@ -7,10 +7,16 @@ import { isUUID, validate } from "class-validator";
 import { formatValidationErrors } from "../utility/validation.utility";
 import { UpdateTagDto } from "../validation/dto/update-tag.dto copy";
 
-// * Get all articles
+// * Get all tags
 export const Tags = async (req: Request, res: Response) => {
     const tagRepository = myDataSource.getRepository(Tag);
-    const tags = await tagRepository.find();
+    let tags = await tagRepository.find();
+    if (req.query.search) {
+        const search = req.query.search.toString().toLowerCase();
+        tags = tags.filter(
+            p => p.nama.toLowerCase().indexOf(search) >= 0
+        );
+    }
     res.send(tags);
 };
 
@@ -88,7 +94,7 @@ export const GetTagArticle = async (req: Request, res: Response) => {
     const tag = await tagService.findOne({ where: { nama: req.params.nama }, relations: ['article'] });
 
     if (!tag) {
-        return res.status(404).send({message: "Tag tidak ditemukan"})
+        return res.status(404).send({ message: "Tag tidak ditemukan" });
     }
 
     res.send(tag);

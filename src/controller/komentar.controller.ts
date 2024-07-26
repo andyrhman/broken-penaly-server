@@ -27,10 +27,9 @@ export const GetComment = async (req: Request, res: Response) => {
         return res.status(404).send({ message: "Komentar tidak ditemukan" });
     }
 
-    // Process comments to count likes
     const komentarWithLikes = komentar.map(k => {
         const komentarLikeCount = k.komentarLike.reduce((acc, like) => acc + like.likes, 0);
-        
+
         const balasKomentarWithLikeCount = k.balasKomentar.map(balas => {
             const komentarBalasLikeCount = balas.komentarBalasLike.reduce((acc, like) => acc + like.likes, 0);
             return {
@@ -120,6 +119,38 @@ export const LikeComment = async (req: Request, res: Response) => {
     });
 
     res.status(202).send({ message: "Liked!" });
+};
+
+// * Dislike Comment (Parent)
+export const DislikeComment = async (req: Request, res: Response) => {
+    if (!isUUID(req.params.id)) {
+        return res.status(400).send({ message: "Request tidak valid" });
+    }
+
+    const komentarLikesRepository = myDataSource.getRepository(KomentarLikes);
+
+    await komentarLikesRepository.findOneBy({ komentar_id: req.params.id, user_id: req['user'].id });
+
+    await komentarLikesRepository.delete({ komentar_id: req.params.id });
+
+    res.status(202).send({ message: "Dislike!" });
+};
+
+// * Check comment like (Parent)
+export const CheckCommentLike = async (req: Request, res: Response) => {
+    if (!isUUID(req.params.id)) {
+        return res.status(400).send({ message: "Request tidak valid" });
+    }
+
+    const komentarLikesRepository = myDataSource.getRepository(KomentarLikes);
+
+    const komentar = await komentarLikesRepository.findOneBy({ komentar_id: req.params.id, user_id: req['user'].id });
+
+    if (!komentar) {
+        return res.send({ message: "False" });
+    }
+
+    res.status(200).send({ message: "True" });
 };
 
 // * Like Reply Comment (Child)

@@ -14,7 +14,35 @@ import { UpdateArticleStatusDTO } from "../validation/dto/update-article-status.
 // * Get all articles
 export const Articles = async (req: Request, res: Response) => {
     const articleRepository = myDataSource.getRepository(Article);
-    const articles = await articleRepository.find({ order: { dibuat_pada: "DESC" } });
+    const filter = req.query.filter as string;
+    const search = req.query.search ? req.query.search.toString().toLowerCase() : null;
+
+    let status: string | null = null;
+    if (filter === "pending") {
+        status = "Pending";
+    } else if (filter === "publish") {
+        status = "Diterbitkan";
+    } else if (filter === "ditolak") {
+        status = "Ditolak";
+    }
+
+    const queryBuilder = articleRepository
+        .createQueryBuilder("article")
+        .leftJoinAndSelect("article.status_publish", "status_publish")
+        .orderBy("article.dibuat_pada", "DESC");
+
+    if (status) {
+        queryBuilder.where("status_publish.status = :status", { status });
+    }
+
+    if (search) {
+        queryBuilder.andWhere(
+            "(LOWER(article.title) LIKE :search OR LOWER(article.deskripsi_kecil) LIKE :search OR LOWER(article.deskripsi_panjang) LIKE :search)",
+            { search: `%${search}%` }
+        );
+    }
+
+    const articles = await queryBuilder.getMany();
     res.send(articles);
 };
 
@@ -151,6 +179,39 @@ export const LikeArticle = async (req: Request, res: Response) => {
     });
 
     res.status(202).send({ message: "Liked!" });
+};
+
+// * Dislike Article
+export const DislikeArticle = async (req: Request, res: Response) => {
+
+    if (!isUUID(req.params.id)) {
+        return res.status(400).send({ message: "Request tidak valid" });
+    }
+
+    const articleLikesRepository = myDataSource.getRepository(Likes);
+
+    const article = await articleLikesRepository.findOneBy({ article_id: req.params.id, user_id: req['user'].id });
+
+    await articleLikesRepository.delete(article.id);
+
+    res.status(202).send({ message: "Dislike!" });
+};
+
+// * Check User Like Article
+export const CheckUserLikeArticle = async (req: Request, res: Response) => {
+    if (!isUUID(req.params.id)) {
+        return res.status(400).send({ message: "Request tidak valid" });
+    }
+
+    const articleLikesRepository = myDataSource.getRepository(Likes);
+
+    const article = await articleLikesRepository.findOneBy({ article_id: req.params.id, user_id: req['user'].id });
+
+    if (!article) {
+        return res.send({ message: "False" });
+    }
+
+    res.status(200).send({ message: "True" });
 };
 
 // * Get one Article

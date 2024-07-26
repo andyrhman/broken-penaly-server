@@ -7,6 +7,10 @@ export class UpdateUserDTO {
 
   @IsString()
   @IsOptional()
+  foto?: string;
+
+  @IsString()
+  @IsOptional()
   @Length(3, 30, { message: 'Username harus ada di antara 3 and 30 huruf' })
   username?: string;
 
@@ -14,7 +18,6 @@ export class UpdateUserDTO {
   @IsOptional()
   email?: string;
 
-  @IsInt({ message: 'Role tidak valid' })
   @IsOptional()
   role_id: number;
 }

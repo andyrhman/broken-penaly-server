@@ -9,9 +9,15 @@ import { isInteger } from '../utility/parameters.utility';
 
 export const Roles = async (req: Request, res: Response) => {
     const repository = myDataSource.getRepository(Role);
-
-    res.send(await repository.find());
-}
+    let roles = await repository.find();
+    if (req.query.search) {
+        const search = req.query.search.toString().toLowerCase();
+        roles = roles.filter(
+            p => p.nama.toLowerCase().indexOf(search) >= 0
+        );
+    }
+    res.send(roles);
+};
 
 export const CreateRole = async (req: Request, res: Response) => {
     const { nama, permissions } = req.body;
@@ -29,19 +35,19 @@ export const CreateRole = async (req: Request, res: Response) => {
         permissions: permissions.map((id: any) => {
             return {
                 id: id
-            }
-        })  
+            };
+        })
     });
 
     res.status(201).send(role);
-}
+};
 
 export const GetRole = async (req: Request, res: Response) => {
     const repository = myDataSource.getRepository(Role);
     const id = parseInt(req.params.id, 10);
 
     res.send(await repository.findOne({ where: { id }, relations: ['permissions'] }));
-}
+};
 
 export const UpdateRole = async (req: Request, res: Response) => {
     const repository = myDataSource.getRepository(Role);
@@ -60,12 +66,12 @@ export const UpdateRole = async (req: Request, res: Response) => {
         permissions: permissions.map((id: any) => {
             return {
                 id: id
-            }
-        })  
+            };
+        })
     });
 
     res.status(202).send(role);
-}
+};
 
 export const DeleteRole = async (req: Request, res: Response) => {
     if (!isInteger(req.params.id)) {
@@ -77,4 +83,4 @@ export const DeleteRole = async (req: Request, res: Response) => {
     await repository.delete(req.params.id);
 
     res.status(204).send(null);
-}
+};

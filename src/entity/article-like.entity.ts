@@ -16,11 +16,11 @@ export class Likes {
     @Column({ name: "article_id" })
     article_id: string;
 
-    @ManyToOne(() => User, user => user.likes)
+    @ManyToOne(() => User, user => user.likes, { onDelete: 'CASCADE' })
     @JoinColumn({ name: "user_id" })
     user: User;
 
-    @ManyToOne(() => Article, article => article.likes)
+    @ManyToOne(() => Article, article => article.likes, { onDelete: 'CASCADE' })
     @JoinColumn({ name: "article_id" })
     article: Article;
 }

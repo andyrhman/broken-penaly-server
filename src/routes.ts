@@ -7,8 +7,8 @@ import { CreateRole, DeleteRole, GetRole, Roles, UpdateRole } from "./controller
 import { Permissions } from "./controller/permission.controller";
 import { CreateTag, DeleteTag, GetTag, GetTagArticle, Tags, UpdateTag } from "./controller/tag.controller";
 import { UploadArticleImage, UploadUserImage } from "./controller/upload.controller";
-import { Articles, ArticlesPending, ArticlesPublish, ChangeArticleStatus, CreateArticle, CreateArticleUser, DeleteArticle, GetArticle, LikeArticle, UpdateArticle, UpdateArticleUser } from "./controller/article.controller";
-import { CreateComment, DeleteComment, DeleteCommentReply, GetComment, LikeComment, LikeReplyComment, ReplyComment } from "./controller/komentar.controller";
+import { Articles, ArticlesPending, ArticlesPublish, ChangeArticleStatus, CheckUserLikeArticle, CreateArticle, CreateArticleUser, DeleteArticle, DislikeArticle, GetArticle, LikeArticle, UpdateArticle, UpdateArticleUser } from "./controller/article.controller";
+import { CheckCommentLike, CreateComment, DeleteComment, DeleteCommentReply, DislikeComment, GetComment, LikeComment, LikeReplyComment, ReplyComment } from "./controller/komentar.controller";
 import { ArticleStat, Stats, UsersStat } from "./controller/statistic.controller";
 
 export const routes = (router: Router) => {
@@ -20,7 +20,7 @@ export const routes = (router: Router) => {
     router.put('/api/user/info', AuthMiddleware, UpdateInfo);
     router.put('/api/user/password', AuthMiddleware, UpdatePassword);
 
-    // * User
+    // * User   
     router.get('/api/users', AuthMiddleware, PermissionMiddleware('users'), Users);
     router.post('/api/users', AuthMiddleware, PermissionMiddleware('users'), CreateUser);
     router.get('/api/users/:id', AuthMiddleware, PermissionMiddleware('users'), GetUser);
@@ -54,6 +54,8 @@ export const routes = (router: Router) => {
 
     // * Artikel user managed
     router.put('/api/articles/like/:id', AuthMiddleware, LikeArticle);
+    router.put('/api/articles/dislike/:id', AuthMiddleware, DislikeArticle);
+    router.get('/api/articles/like/:id', AuthMiddleware, CheckUserLikeArticle); 
     router.post('/api/articles/create', AuthMiddleware, CreateArticleUser);
     router.put('/api/articles/update/:id', AuthMiddleware, UpdateArticleUser);
     router.get('/api/article/tags/:nama', GetTagArticle);
@@ -62,7 +64,11 @@ export const routes = (router: Router) => {
     router.get('/api/comments/:id', GetComment);
     router.post('/api/comments/:id', AuthMiddleware, CreateComment);
     router.post('/api/balaskomentar', AuthMiddleware, ReplyComment);
+
     router.post('/api/comments/like/:id', AuthMiddleware, LikeComment);
+    router.post('/api/comments/dislike/:id', AuthMiddleware, DislikeComment);
+    router.get('/api/comments/like/:id', AuthMiddleware, CheckCommentLike);
+
     router.post('/api/komentar/like/balas', AuthMiddleware, LikeReplyComment);
     router.delete('/api/comments/:id', AuthMiddleware, DeleteComment);
     router.delete('/api/hapuskomentar/balas', AuthMiddleware, DeleteCommentReply);
@@ -77,4 +83,6 @@ export const routes = (router: Router) => {
     router.use('/api/uploads/articles', express.static('./uploads/articles'));
     router.post('/api/upload/users', AuthMiddleware, UploadUserImage);
     router.use('/api/uploads/users', express.static('./uploads/users'));
+    router.use('/api/uploads', express.static('./uploads'));
+
 };

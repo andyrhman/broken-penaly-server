@@ -11,7 +11,14 @@ import { UpdateUserDTO } from "../validation/dto/update-user.dto";
 
 export const Users = async (req: Request, res: Response) => {
     const userRepository = myDataSource.getRepository(User);
-    const users = await userRepository.find({ order: { dibuat_pada: "DESC" } });
+    let users = await userRepository.find({ order: { dibuat_pada: "DESC" }, relations: ['role'] });
+    if (req.query.search) {
+        const search = req.query.search.toString().toLowerCase();
+        users = users.filter(
+            p => p.namaLengkap.toLowerCase().indexOf(search) >= 0 ||
+                p.username.toLowerCase().indexOf(search) >= 0
+        );
+    }
     res.send(users);
 };
 
@@ -77,6 +84,10 @@ export const UpdateUser = async (req: Request, res: Response) => {
         existingUser.namaLengkap = req.body.namaLengkap;
     }
 
+    if (req.body.foto) {
+        existingUser.foto = req.body.foto;
+    }
+
     if (req.body.email && req.body.email !== existingUser.email) {
         const existingUserByEmail = await userService.findOne({ where: { email: req.body.email } });
         if (existingUserByEmail) {
@@ -98,7 +109,7 @@ export const UpdateUser = async (req: Request, res: Response) => {
         if (!role) {
             return res.status(404).send({ message: 'Role tidak ditemukan' });
         }
-        existingUser.role = req.body.role_id;
+        existingUser.role_id = req.body.role_id;
     }
 
     await userService.update(req.params.id, existingUser);

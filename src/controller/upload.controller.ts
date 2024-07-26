@@ -47,3 +47,26 @@ export const UploadUserImage = async (req: Request, res: Response) => {
         });
     });
 };
+
+export const DefaultProfile = async (req: Request, res: Response) => {
+
+    const storage = multer.diskStorage({
+        destination: './uploads',
+        filename(_, file, callback) {
+            const randomName = Math.random().toString(20).slice(2, 12);
+            return callback(null, `${randomName}${extname(file.originalname)}`);
+        }
+    });
+
+    const upload = multer({ storage }).single('image');
+
+    upload(req, res, (err: any) => {
+        if (err) {
+            return res.status(400).send(err);
+        }
+
+        res.send({
+            url: `http://localhost:8000/api/uploads/${req.file.filename}`
+        });
+    });
+};

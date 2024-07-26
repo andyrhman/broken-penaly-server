@@ -25,7 +25,7 @@ export class Article {
     @Column()
     estimasi_membaca: string;
 
-    @Column()
+    @Column({ default: `${process.env.SERVER_ENDPOINT}uploads/default-article.jpg` })
     gambar: string;
 
     @CreateDateColumn()
@@ -37,12 +37,12 @@ export class Article {
     @Column({ name: "tag_id" })
     tag_id: string;
 
-    @ManyToOne(() => User, user => user.article)
+    @ManyToOne(() => User, user => user.article, { onDelete: 'CASCADE' })
     @JoinColumn({ name: 'penulis' })
     user: User;
 
-    @ManyToOne(() => Tag, tag => tag.article)
-    @JoinColumn({name: "tag_id"})
+    @ManyToOne(() => Tag, tag => tag.article, { onDelete: 'CASCADE' })
+    @JoinColumn({ name: "tag_id" })
     tag: Tag;
 
     @OneToMany(() => Komentar, (komentar) => komentar.article)

@@ -24,6 +24,9 @@ export class User {
     @Column()
     namaLengkap: string;
 
+    @Column({ default: `${process.env.SERVER_ENDPOINT}uploads/default-profile.jpg` })
+    foto: string;
+
     @Column()
     username: string;
 
