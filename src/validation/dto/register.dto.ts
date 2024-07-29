@@ -16,7 +16,7 @@ export class RegisterDto {
   email: string;
 
   @IsString()
-  @Length(6, undefined, { message: 'Password harus memiliki 6 huruf maksimal' })
+  @Length(6, undefined, { message: '    ' })
   password: string;
 
   @IsString()

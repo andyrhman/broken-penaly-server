@@ -26,7 +26,7 @@ export class BalasKomentar {
     komentar: Komentar;
 
     @ManyToOne(() => User, (user) => user.balasKomentar, { onDelete: 'CASCADE' })
-    @JoinColumn({ name: "user" })
+    @JoinColumn({ name: "user_id" }) 
     user: User;
 
     @OneToMany(() => BalasKomentarLikes, komentarBalasLike => komentarBalasLike.komentarBalas)

@@ -142,6 +142,14 @@ export const UpdateInfo = async (req: Request, res: Response) => {
         existingUser.namaLengkap = req.body.namaLengkap;
     }
 
+    if (req.body.foto) {
+        existingUser.foto = req.body.foto;
+    }
+
+    if (req.body.bio) {
+        existingUser.bio = req.body.bio;
+    }
+
     if (req.body.email && req.body.email !== existingUser.email) {
         const existingUserByEmail = await userService.findOne({ where: { email: req.body.email } });
         if (existingUserByEmail) {

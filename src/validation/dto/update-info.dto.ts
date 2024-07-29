@@ -13,4 +13,12 @@ export class UpdateInfoDTO {
   @IsEmail({}, { message: 'Email must be a valid email address' })
   @IsOptional()
   email?: string;
+
+  @IsString()
+  @IsOptional()
+  foto?: string;
+
+  @IsString()
+  @IsOptional()
+  bio?: string;
 }

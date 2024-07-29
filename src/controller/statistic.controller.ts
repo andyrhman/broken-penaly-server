@@ -18,7 +18,7 @@ export const Stats = async (req: Request, res: Response) => {
     const articleLike_total = await articleLikeService.totalLikes();
 
     res.send({
-        user_total: user_total.total,
+        user_total: user_total.total,   
         article_total: article_total.total,
         comment_total: comment_total,
         articleLike_total: articleLike_total

@@ -100,7 +100,6 @@ export const GetTagArticle = async (req: Request, res: Response) => {
     res.send(tag);
 };
 
-
 // * Hapus Tag
 export const DeleteTag = async (req: Request, res: Response) => {
     if (!isUUID(req.params.id)) {

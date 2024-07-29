@@ -7,8 +7,8 @@ import { CreateRole, DeleteRole, GetRole, Roles, UpdateRole } from "./controller
 import { Permissions } from "./controller/permission.controller";
 import { CreateTag, DeleteTag, GetTag, GetTagArticle, Tags, UpdateTag } from "./controller/tag.controller";
 import { UploadArticleImage, UploadUserImage } from "./controller/upload.controller";
-import { Articles, ArticlesPending, ArticlesPublish, ChangeArticleStatus, CheckUserLikeArticle, CreateArticle, CreateArticleUser, DeleteArticle, DislikeArticle, GetArticle, LikeArticle, UpdateArticle, UpdateArticleUser } from "./controller/article.controller";
-import { CheckCommentLike, CreateComment, DeleteComment, DeleteCommentReply, DislikeComment, GetComment, LikeComment, LikeReplyComment, ReplyComment } from "./controller/komentar.controller";
+import { Articles, ArticlesMostLikes, ArticlesPending, ArticlesPublish, ArticlesPublishNew, ChangeArticleStatus, CheckUserLikeArticle, CreateArticle, CreateArticleUser, DeleteArticle, DeleteArticleUser, DislikeArticle, GetArticle, GetArticleCounts, GetUserOwnArticle, LikeArticle, UpdateArticle, UpdateArticleUser } from "./controller/article.controller";
+import { AdminDeleteComment, AdminDeleteCommentReply, CheckCommentLike, CheckCommentLikeReply, CreateComment, DeleteComment, DeleteCommentReply, DislikeComment, DislikeReplyComment, GetComment, LikeComment, LikeReplyComment, ReplyComment } from "./controller/komentar.controller";
 import { ArticleStat, Stats, UsersStat } from "./controller/statistic.controller";
 
 export const routes = (router: Router) => {
@@ -45,19 +45,25 @@ export const routes = (router: Router) => {
     // * Artikel
     router.get('/api/articles', AuthMiddleware, PermissionMiddleware('articles'), Articles);
     router.get('/api/articles/pending', AuthMiddleware, PermissionMiddleware('articles'), ArticlesPending);
-    router.get('/api/articles/published', ArticlesPublish);
     router.post('/api/articles', AuthMiddleware, PermissionMiddleware('articles'), CreateArticle);
-    router.get('/api/articles/:slug', AuthMiddleware, PermissionMiddleware('articles'), GetArticle);
     router.put('/api/articles/:id', AuthMiddleware, PermissionMiddleware('articles'), UpdateArticle);
     router.delete('/api/articles/:id', AuthMiddleware, PermissionMiddleware('articles'), DeleteArticle);
     router.put('/api/articles/status/:id', AuthMiddleware, PermissionMiddleware('articles'), ChangeArticleStatus);
 
     // * Artikel user managed
+    router.get('/api/articles/published', ArticlesPublish);
+    router.get('/api/articles/published/new', ArticlesPublishNew);
+    router.get('/api/articles/mostlikes', ArticlesMostLikes);
+    router.get('/api/articles/:slug', GetArticle);
+    router.get('/api/artikelku', AuthMiddleware, GetUserOwnArticle);
+    router.get('/api/artikelku/hitung', AuthMiddleware, GetArticleCounts);
+
     router.put('/api/articles/like/:id', AuthMiddleware, LikeArticle);
     router.put('/api/articles/dislike/:id', AuthMiddleware, DislikeArticle);
     router.get('/api/articles/like/:id', AuthMiddleware, CheckUserLikeArticle); 
     router.post('/api/articles/create', AuthMiddleware, CreateArticleUser);
     router.put('/api/articles/update/:id', AuthMiddleware, UpdateArticleUser);
+    router.delete('/api/articles/delete/:id', AuthMiddleware, DeleteArticleUser);
     router.get('/api/article/tags/:nama', GetTagArticle);
 
     // * Komentar
@@ -70,6 +76,11 @@ export const routes = (router: Router) => {
     router.get('/api/comments/like/:id', AuthMiddleware, CheckCommentLike);
 
     router.post('/api/komentar/like/balas', AuthMiddleware, LikeReplyComment);
+    router.post('/api/komentar/dislike/balas', AuthMiddleware, DislikeReplyComment);
+    router.get('/api/komentar/like/check', AuthMiddleware, CheckCommentLikeReply);
+
+    router.delete('/api/admin/comments/:id/:user_id', AuthMiddleware, PermissionMiddleware('comments'), AdminDeleteComment);
+    router.delete('/api/admin/hapuskomentar/balas', AuthMiddleware, PermissionMiddleware('comments'), AdminDeleteCommentReply);
     router.delete('/api/comments/:id', AuthMiddleware, DeleteComment);
     router.delete('/api/hapuskomentar/balas', AuthMiddleware, DeleteCommentReply);
 

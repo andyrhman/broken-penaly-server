@@ -27,6 +27,9 @@ export class User {
     @Column({ default: `${process.env.SERVER_ENDPOINT}uploads/default-profile.jpg` })
     foto: string;
 
+    @Column({ default: "Pengguna website penaly yang ingin mengetahui lebih banyak tentang website ini.", nullable: true })
+    bio: string;
+
     @Column()
     username: string;
 

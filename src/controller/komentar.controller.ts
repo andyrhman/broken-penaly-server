@@ -20,7 +20,7 @@ export const GetComment = async (req: Request, res: Response) => {
 
     const komentar = await komentarRepository.find({
         where: { article_id: req.params.id },
-        relations: ['article', 'user', 'balasKomentar', 'komentarLike', 'balasKomentar.komentarBalasLike']
+        relations: ['user', 'balasKomentar', 'komentarLike', 'balasKomentar.komentarBalasLike', 'balasKomentar.user']
     });
 
     if (!komentar) {
@@ -96,7 +96,6 @@ export const ReplyComment = async (req: Request, res: Response) => {
 
     res.status(201).send(komentar);
 };
-
 
 // * Like Comment (Parent)
 export const LikeComment = async (req: Request, res: Response) => {
@@ -174,6 +173,70 @@ export const LikeReplyComment = async (req: Request, res: Response) => {
     });
 
     res.status(202).send({ message: "Liked!" });
+};
+
+// * Dislike Reply Comment (Child)
+export const DislikeReplyComment = async (req: Request, res: Response) => {
+    if (!isUUID(req.body.komentar_id) || !req.body.komentar_id) {
+        return res.status(400).send({ message: "Request tidak valid" });
+    }
+
+    const komentarReplyRepository = myDataSource.getRepository(BalasKomentarLikes);
+
+    const komentar = await komentarReplyRepository.findOneBy({ komentar_id: req.body.komentar_id, user_id: req['user'].id });
+
+    await komentarReplyRepository.delete(komentar.id);
+
+    res.status(202).send({ message: "Disliked!" });
+};
+
+// * Check comment like (Parent)
+export const CheckCommentLikeReply = async (req: Request, res: Response) => {
+    if (!isUUID(req.params.id)) {
+        return res.status(400).send({ message: "Request tidak valid" });
+    }
+
+    const komentarReplyRepository = myDataSource.getRepository(BalasKomentarLikes);
+
+    const komentar = await komentarReplyRepository.findOneBy({ komentar_id: req.body.komentar_id, user_id: req['user'].id });
+
+    if (!komentar) {
+        return res.send({ message: "False" });
+    }
+
+    res.status(200).send({ message: "True" });
+};
+
+// * Admin Delete Comment
+export const AdminDeleteComment = async (req: Request, res: Response) => {
+    if (!isUUID(req.params.id) || !isUUID(req.params.user_id)) {
+        return res.status(400).send({ message: "Tidak Diizinkan" });
+    }
+    const komentarRepository = myDataSource.getRepository(Komentar);
+
+    const checkKomentar = await komentarRepository.findOneBy({ id: req.params.id, user_id: req.params.user_id });
+
+    await komentarRepository.delete(checkKomentar.id);
+
+    res.status(204).send(null);
+};
+
+// * Admin Delete Comment Reply
+export const AdminDeleteCommentReply = async (req: Request, res: Response) => {
+    if (!isUUID(req.body.komentar_id) || !req.body.komentar_id) {
+        return res.status(400).send({ message: "Request tidak valid" });
+    }
+    const komentarReplyRepository = myDataSource.getRepository(BalasKomentar);
+
+    const checkUser = await komentarReplyRepository.findOneBy({ id: req.body.komentar_id, user_id: req.body.user_id });
+
+    if (!checkUser) {
+        return res.status(403).send({ message: "Tidak Diizinkan" });
+    }
+
+    await komentarReplyRepository.delete(req.body.komentar_id);
+
+    res.status(204).send(null);
 };
 
 // * Delete Comment
