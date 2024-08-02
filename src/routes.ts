@@ -60,7 +60,7 @@ export const routes = (router: Router) => {
 
     router.put('/api/articles/like/:id', AuthMiddleware, LikeArticle);
     router.put('/api/articles/dislike/:id', AuthMiddleware, DislikeArticle);
-    router.get('/api/articles/like/:id', AuthMiddleware, CheckUserLikeArticle); 
+    router.get('/api/articles/like/:id', AuthMiddleware, CheckUserLikeArticle);     
     router.post('/api/articles/create', AuthMiddleware, CreateArticleUser);
     router.put('/api/articles/update/:id', AuthMiddleware, UpdateArticleUser);
     router.delete('/api/articles/delete/:id', AuthMiddleware, DeleteArticleUser);
