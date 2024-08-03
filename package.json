@@ -2,10 +2,10 @@
   "name": "penaly-server",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "server.ts",
   "scripts": {
-    "start": "node dist/index.js",
-    "dev": "nodemon src/index.ts",
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.ts",
     "build": "tsc",
     "roles:seed": "ts-node src/seed/role.seed.ts",
     "tags:seed": "ts-node src/seed/tag.seed.ts",
