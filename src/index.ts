@@ -68,3 +68,5 @@ myDataSource
   .catch((err) => {
     logger.error(err);
   });
+
+export default app;

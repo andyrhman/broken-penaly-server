@@ -4,12 +4,13 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node dist/index.js",
+    "start": "ts-node src/index.ts",
     "dev": "nodemon src/index.ts",
     "build": "tsc",
     "roles:seed": "ts-node src/seed/role.seed.ts",
     "tags:seed": "ts-node src/seed/tag.seed.ts",
-    "users:seed": "ts-node src/seed/user.seed.ts"
+    "users:seed": "ts-node src/seed/user.seed.ts",
+    "vercel-build": "echo hello"
   },
   "keywords": [],
   "author": "",
