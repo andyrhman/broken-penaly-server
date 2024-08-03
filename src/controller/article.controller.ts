@@ -93,7 +93,10 @@ export const ArticlesPublish = async (req: Request, res: Response) => {
         select: [
             'id', 'title', 'slug', 'deskripsi_kecil', 'estimasi_membaca', 'gambar',
             'dibuat_pada', 'penulis', 'tag', 'user'
-        ]
+        ],
+        order: {
+            dibuat_pada: 'DESC'
+        }
     });
 
     const filteredArticles = await Promise.all(articles

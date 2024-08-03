@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { User } from "./user.entity";
 import { Tag } from "./tag.entity";
