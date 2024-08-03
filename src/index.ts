@@ -1,11 +1,9 @@
 require("dotenv").config();
 
-import logger from "./config/logger.config";
 import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import myDataSource from "./config/db.config";
-import EventEmitter from 'events';
 import { routes } from "./routes";
 import { ValidationMiddleware } from "./middleware/validation.middleware";
 import { AppError } from "./utility/apperror.utility";
@@ -17,7 +15,7 @@ import { globalErrorHandler } from "./middleware/error.middleware";
 // import "./event/order.listener"
 
 process.on('uncaughtException', (err) => {
-  logger.error('UNCAUGHT EXCEPTION! Continuing...');
+  console.error('UNCAUGHT EXCEPTION! Continuing...');
   if (process.env.NODE_ENV === 'development') {
     console.error(err);
   }
@@ -48,14 +46,14 @@ myDataSource
     // Global error handling middleware
     app.use(globalErrorHandler);
 
-    logger.info("🗃️ Database has been initialized!");
+    console.log("Database has been initialized!");
     const server = app.listen(8000, () => {
-      logger.info("👍 Server listening on port 8000");
+      console.log("Server listening on port 8000");
     });
 
     // Handle unhandled promise rejections
     process.on('unhandledRejection', (err: any) => {
-      logger.error('UNHANDLED REJECTION! Continuing...');
+      console.error('UNHANDLED REJECTION! Continuing...');
       if (process.env.NODE_ENV === 'development') {
         console.error(err);
       }
@@ -66,7 +64,7 @@ myDataSource
     });
   })
   .catch((err) => {
-    logger.error(err);
+    console.error(err);
   });
 
 export default app;
