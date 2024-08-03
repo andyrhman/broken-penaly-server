@@ -1,8 +1,8 @@
 import { IsNotEmpty, IsString, IsUUID } from "class-validator";
 
 export class CreateArticleDto {
-    @IsString({ message: 'Nama lengkap harus string' })
-    @IsNotEmpty({ message: "Nama lengkap tidak boleh kosong" })
+    @IsString({ message: 'Nama Artikel harus string' })
+    @IsNotEmpty({ message: "Nama Artikel tidak boleh kosong" })
     title: string;
 
     @IsString({ message: 'Deskripsi harus string' })

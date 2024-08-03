@@ -1,7 +1,5 @@
 # Node.js
 node_modules/
-uploads/*
-!uploads/.gitkeep 
 
 # Logs
 logs

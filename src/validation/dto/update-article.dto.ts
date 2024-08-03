@@ -1,7 +1,7 @@
 import { IsOptional, IsString, IsUUID } from "class-validator";
 
 export class UpdateArticleDto {
-    @IsString({ message: 'Nama lengkap harus string' })
+    @IsString({ message: 'Nama Artikel harus string' })
     @IsOptional()
     title?: string;
 

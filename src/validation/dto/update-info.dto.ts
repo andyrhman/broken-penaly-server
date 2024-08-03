@@ -1,16 +1,16 @@
-import { IsString, Length, IsEmail, IsOptional, IsInt } from 'class-validator';
+import { IsString, Length, IsEmail, IsOptional } from 'class-validator';
 
 export class UpdateInfoDTO {
-  @IsString({ message: 'Full name must be a string' })
+  @IsString({ message: 'Nama Lengkap harus string' })
   @IsOptional()
   namaLengkap?: string;
 
   @IsString()
   @IsOptional()
-  @Length(3, 30, { message: 'Username must be between 3 and 30 characters' })
+  @Length(3, 30, { message: 'Username harus ada di antara 3 and 30 huruf' })
   username?: string;
 
-  @IsEmail({}, { message: 'Email must be a valid email address' })
+  @IsEmail({}, { message: 'Email tidak valid' })
   @IsOptional()
   email?: string;
 
