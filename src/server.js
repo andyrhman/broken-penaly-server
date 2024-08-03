@@ -40,7 +40,7 @@ db_config_1.default
     // Global error handling middleware
     app.use(error_middleware_1.globalErrorHandler);
     console.log("Database has been initialized!");
-    const server = app.listen(8000, () => {
+    const server = app.listen(process.env.PORT, () => {
         console.log("Server listening on port 8000");
     });
     // Handle unhandled promise rejections
