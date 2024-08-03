@@ -9,8 +9,7 @@
     "build": "tsc",
     "roles:seed": "ts-node src/seed/role.seed.ts",
     "tags:seed": "ts-node src/seed/tag.seed.ts",
-    "users:seed": "ts-node src/seed/user.seed.ts",
-    "vercel-build": "echo hello"
+    "users:seed": "ts-node src/seed/user.seed.ts"
   },
   "keywords": [],
   "author": "",
