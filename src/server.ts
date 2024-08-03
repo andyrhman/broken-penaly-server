@@ -47,7 +47,7 @@ myDataSource
     app.use(globalErrorHandler);
 
     console.log("Database has been initialized!");
-    const server = app.listen(8000, () => {
+    const server = app.listen(process.env.PORT, () => {
       console.log("Server listening on port 8000");
     });
 
